@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>minihompy ♡</title>
+<meta name="viewport" content="width=1300, shrink-to-fit=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  /* ============================================================
+     color palette
+     edit these hex values to change the theme colors everywhere
+     ============================================================ */
+  :root {
+    --pink-bg: #ffd6e7;
+    --pink-mid: #ff9dc4;
+    --pink-strong: #ff6fa5;
+    --pink-tab: #ff85b3;
+    --binder-grey: #f7f7f7;
+    --card-white: #ffffff;
+    --ink: #5c4a4f;
+    --ink-soft: #9c8489;
+  }
+
+  /* ============================================================
+     custom fonts
+     swap the "src" url if you want to use a different font file
+     ============================================================ */
+  @font-face {
+    font-family: 'script';
+    src: url("https://cdn.jsdelivr.net/gh/dearcoeur/coeur-assets@main/fonts/PF%20Pixelscript%20Pro%20Regular.ttf");
+  }
+
+  @font-face {
+    font-family: '04b03';
+    src: url("https://cdn.jsdelivr.net/gh/dearcoeur/coeur-assets@main/fonts/04b03.ttf");
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* ============================================================
+     custom cursor
+     change the url to any .gifv/.png to use your own cursor image
+     ============================================================ */
+  html,
+  body,
+  *,
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    cursor: url('https://64.media.tumblr.com/7433e1047b83424374a7a3536e7138f6/e9cbf4a284353a66-df/s75x75_c1/9f2e786a97be22c5d1395121b88c6f5197ac7a42.gifv') 0 0, progress !important;
+  }
+
+  /* ============================================================
+     text selection color
+     this is the highlight color when a visitor selects text
+     ============================================================ */
+  ::selection {
+    background-color: #ffedf5;
+    color: #8d7c76;
+  }
+
+  ::-moz-selection {
+    background-color: #ffedf5;
+    color: #8d7c76;
+  }
+
+  /* ============================================================
+     link states
+     controls how links look normal / visited / hover / active
+     ============================================================ */
+  a:link {
+    color: #ef8bbb;
+    background-color: transparent;
+    text-decoration: none;
+  }
+
+  a:visited {
+    color: #ef8bbb;
+    background-color: transparent;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #ef8bbb;
+    background-color: transparent;
+    text-decoration: dotted underline;
+    font-style: italic;
+  }
+
+  a:active {
+    color: #ef8bbb;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+
+  /* ============================================================
+     page background
+     edit background-color / background-image for a different vibe
+     ============================================================ */
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #fdf1f6;
+    background-image:
+      radial-gradient(circle, #ffffff 18%, transparent 20%),
+      radial-gradient(circle, #ffffff 18%, transparent 20%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+    font-family: '04b03';
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #8d7c76;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow: hidden;
+    image-rendering: pixelated;
+  }
+
+  /* ============================================================
+     outer wrapper
+     controls overall page width and offset from the corner gif
+     ============================================================ */
+  .book {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    padding-right: 76px;
+    margin-left: 60px;
+  }
+
+  /* ============================================================
+     binder / notebook frame
+     this is the main "notebook" box holding both panels
+     change grid-template-columns to resize the left/right panels
+     change height to make the whole notebook taller/shorter
+     ============================================================ */
+  .binder {
+    position: relative;
+    background: var(--binder-grey);
+    border-radius: 16px;
+    border: 1px solid #aaaaaa;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 13px;
+    height: 700px;
+    box-shadow: inset 4px 4px 0px 0px rgba(255, 255, 255, 0.8), inset -4px -4px 0px 0px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .gif {
+    width: auto;
+    height: 200px;
+    position: absolute;
+    bottom: -15px;
+    left: -90px;
+    z-index: 30;
+    filter: saturate(0.85);
+  }
+
+  /* ============================================================
+     top-left hanging decoration (bouncing gif)
+     swap the img src in the html below to change this decoration
+     ============================================================ */
+  .corner-hang {
+    position: fixed;
+    top: 20px;
+    left: 40px;
+    z-index: 50;
+    pointer-events: none;
+    transform-origin: top center;
+  }
+
+  .corner-hang img {
+    display: block;
+    height: 310px;
+    width: auto;
+    image-rendering: pixelated;
+    animation: corner-bounce 1.1s steps(2, jump-none) infinite;
+  }
+
+  @keyframes corner-bounce {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* ============================================================
+     titlebar (top row with visit / online counters)
+     ============================================================ */
+  .titlebar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 4px 4px;
+  }
+
+  .titlebar h1 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #848484;
+    margin: 0;
+    font-family: 'script';
+    line-height: 1;
+    margin-left: 35px;
+    text-shadow:
+      1px 1px 0px rgba(255, 255, 255, 0.8),
+      -1px -1px 0px rgba(0, 0, 0, 0.05),
+      0 2px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  .visit-counter {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    background: #fff;
+    border: 1px solid #aaaaaa;
+    border-radius: 8px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .visit-counter img {
+    height: 14px;
+    width: auto;
+    vertical-align: middle;
+  }
+
+  .visit-counter b {
+    color: #ed97b7;
+  }
+
+  .microblog {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    background: #fff;
+    border: 1px solid #aaaaaa;
+    border-radius: 8px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    margin-left: 30px;
+  }
+
+  .microblog b {
+    color: #ed97b7;
+  }
+
+  /* ============================================================
+     left and right panel base style (shared)
+     ============================================================ */
+  .panel-left,
+  .panel-right {
+    position: relative;
+    background: var(--card-white);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    border: 1px solid #aaaaaa;
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* ============================================================
+     left panel (profile / avatar / stat bars)
+     ============================================================ */
+  .panel-left {
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .panel-left::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* profile picture frame — change width to resize the avatar */
+  .avatar {
+    width: 180px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 5px solid white;
+    outline: 1px solid #aaaaaa;
+    margin-top: 53px;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .owner-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ed97b7;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* wrapper box for the stat bars ("percent" rows) */
+  .intro {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    width: 100%;
+  }
+
+  .status-chip {
+    margin-top: auto;
+    background: #fff;
+    border: 1px solid #aaaaaa;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--pink-strong);
+  }
+
+  /* ============================================================
+     right panel (blog / posts feed)
+     ============================================================ */
+  .panel-right {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 2;
+    padding-left: 10px;
+  }
+
+  /* scrollable area holding every .post block — edit "gap" to
+     change spacing between posts */
+  .board-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .board-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  .entry-no {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--pink-tab);
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+  }
+
+  .entry {
+    background: #fdf5f8;
+    border: 1px solid #aaaaaa;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .entry p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #4a3a3e;
+  }
+
+  .entry .signoff {
+    display: block;
+    text-align: right;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--pink-strong);
+  }
+
+  /* single blog post block — copy the .post html structure
+     below to add a new post */
+  .post {
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #dcbcc8;
+  }
+
+  /* ============================================================
+     lace decorations on top/bottom of the left panel
+     swap background-image url to use a different lace pattern
+     ============================================================ */
+  #top-lace {
+    background-image: url(https://64.media.tumblr.com/fe3db7800a8702089b72b86cd937d5d0/ad18b402b7c89703-91/s100x200/8c2adc81b724a8f0520ec0236ebc91c92677b347.pnj);
+    background-repeat: repeat-x;
+    background-position: bottom center;
+    background-size: auto 100%;
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #bottom-lace {
+    background-image: url(https://64.media.tumblr.com/77daa5dc8ddbbc76810d549fd4853658/ad18b402b7c89703-38/s100x200/2a077bc84ef5c05672daf4c34043a5d90a7c481f.pnj);
+    background-repeat: repeat-x;
+    background-position: bottom center;
+    background-size: auto 100%;
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .post:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .post-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #feeef6;
+    border: 3px solid white;
+    outline: 1px solid #aaaaaa;
+  }
+
+  .post-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .post-username {
+    font-size: 9px;
+    font-weight: 700;
+    color: #ed97b7;
+    font-family: script;
+    margin-left: 5px;
+  }
+
+  .post-time {
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .post-body {
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #8d7c76;
+  }
+
+  /* images inside a post float left by default — add class
+     "right-side" on an <img> to float it right instead */
+  .post-body img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 5px 0;
+    float: left;
+    margin-right: 14px;
+    max-height: 250px;
+    width: auto;
+  }
+
+  .post-body img.right-side {
+    float: right;
+    margin-left: 14px;
+    margin-right: 0;
+  }
+
+  .post-body::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+
+  /* ============================================================
+     spiral binding rings (purely decorative, no need to edit)
+     ============================================================ */
+  .spiral-pair {
+    position: absolute;
+    left: 260px;
+    width: 18px;
+    margin-left: -18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 6;
+  }
+
+  .spiral-pair.top {
+    top: 140px;
+  }
+
+  .spiral-pair.bottom {
+    bottom: 90px;
+  }
+
+  .spiral-ring {
+    width: 44px;
+    height: 11px;
+    position: relative;
+  }
+
+  .spiral-inner {
+    width: 39px;
+    height: 8px;
+    background: linear-gradient(90deg, #d8d8d8 8%, #ffffff 30%, #ffffff 70%, #d8d8d8 92%);
+    border: 1px solid #b8b8b8;
+    border-radius: 20px;
+    position: absolute;
+    z-index: 4;
+    top: 1.6px;
+    left: 3px;
+  }
+
+  .spiral-mid {
+    top: 1;
+    left: 0;
+  }
+
+  .spiral-mid, .spiral-outer {
+    width: 12px;
+    height: 12px;
+    border-radius: 50px;
+    background: radial-gradient(circle at 50% 45%, #ffffff 55%, #dcdcdc 100%);
+    border: 1px solid #b8b8b8;
+    position: absolute;
+    z-index: 3;
+  }
+
+  .spiral-outer {
+    top: 0;
+    right: 0;
+  }
+
+  /* ============================================================
+     side navigation tabs
+     copy an <a> tag in the html below to add a new tab, and add
+     class "active" to whichever tab represents the current page
+     ============================================================ */
+  .tabs {
+    position: absolute;
+    right: -70px;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
+  }
+
+  .tabs a {
+    display: block;
+    background: #ffe0ee;
+    color: #8d7c76;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 10px;
+    width: 92px;
+    border-radius: 0 10px 10px 0;
+    transition: transform 0.15s, background 0.15s;
+    border: 1px solid #aaaaaa;
+    border-left: none;
+    box-shadow:
+      2px 2px 4px rgba(0, 0, 0, 0.12),
+      inset -1px 0 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    text-transform: uppercase;
+  }
+
+  .tabs a::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: inherit;
+    border-radius: 0 0 0 4px;
+  }
+
+  .tabs a:hover {
+    background: #fff;
+    color: #ed97b7;
+    transform: translateX(3px);
+  }
+
+  .tabs a.active {
+    background: #fff;
+    color: #ed97b7;
+    font-weight: 700;
+    width: 100px;
+    margin-left: -8px;
+  }
+
+  /* ============================================================
+     footer credit
+     do not remove or edit the credit link — see html comment
+     near the footer for details
+     ============================================================ */
+  footer.site-footer {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    padding-top: 14px;
+  }
+
+  /* ============================================================
+     stat bars ("percent" rows in the left panel)
+     each row = one .percent div containing a .bar-track (empty
+     bar) and a .bar-fill (colored fill) plus a <span> label
+     - .percent span has a fixed width so every bar starts and
+       ends at the same point, no matter how long the label text is
+       increase width below if you use a longer label than
+       "100% confidence"
+     ============================================================ */
+  .percent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .percent .bar-track {
+    flex: 1;
+    height: 12px;
+    border: 1px solid var(--ink-soft);
+    background: white;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  /* the actual fill color / width is set inline in the html
+     via style="width: XX%" on each .bar-fill div */
+  .percent .bar-fill {
+    height: 100%;
+    background: #ffe0ee;
+    border-radius: 2px 0 0 2px;
+  }
+
+  .percent span {
+    width: 92px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 11px;
+    color: var(--ink);
+  }
+
+</style>
+</head>
+
+<body>
+
+<!-- bouncing gif hanging from the top-left corner of the page -->
+<div class="corner-hang">
+  <img src="https://64.media.tumblr.com/63ed5098644fd4c1d7a23d66c1bdeed7/801586308a44c5e0-11/s250x400/cffaccbd1abcf54e3113e69db80c0e88da871d7a.gifv">
+</div>
+
+<div class="book">
+  <div class="binder">
+
+    <!-- top bar: live visit / online counters (fc2.com widget — see .read-me file for a tutorial on how to set your own!) -->
+    <div class="titlebar">
+      <div class="visit-counter">
+        <span>site visits:</span>
+        <script language="javascript" type="text/javascript" src="//counter1.fc2.com/counter.php?id=89517047"></script><noscript><img src="//counter1.fc2.com/counter_img.php?id=89517047" /></noscript>
+      </div>
+      <div class="visit-counter">
+        <span>online users:</span>
+        <script language="javascript" type="text/javascript" src="//counter1.fc2.com/views.php?id=89517047"></script><noscript><img src="//counter1.fc2.com/counter_now.php?id=89517047" /></noscript>
+      </div>
+    </div>
+
+    <!-- decorative spiral rings, top pair + bottom pair (no need to edit) -->
+    <div class="spiral-pair top">
+      <div class="spiral-ring">
+        <div class="spiral-inner"></div>
+        <div class="spiral-mid"></div>
+        <div class="spiral-outer"></div>
+      </div>
+      <div class="spiral-ring">
+        <div class="spiral-inner"></div>
+        <div class="spiral-mid"></div>
+        <div class="spiral-outer"></div>
+      </div>
+    </div>
+    <div class="spiral-pair bottom">
+      <div class="spiral-ring">
+        <div class="spiral-inner"></div>
+        <div class="spiral-mid"></div>
+        <div class="spiral-outer"></div>
+      </div>
+      <div class="spiral-ring">
+        <div class="spiral-inner"></div>
+        <div class="spiral-mid"></div>
+        <div class="spiral-outer"></div>
+      </div>
+    </div>
+
+    <!-- ================= left panel: profile ================= -->
+    <div class="panel-left">
+      <div id="top-lace"></div>
+
+      <!-- profile picture: replace the img src with your own -->
+      <div class="avatar">
+        <img src="https://64.media.tumblr.com/61d9db197c0d70bcd8adffa217b8843d/31f0591ac33d9eb2-52/s100x200/5c35ed2271fdb395d7775c8193e546f4f55182d5.gifv">
+      </div>
+
+      <!-- small decorative gif under the avatar, replace src or delete this line to remove it -->
+      <img src="https://64.media.tumblr.com/891dae94a5c83e3ac3c7aba62f7aa926/ad18b402b7c89703-2c/s250x400/3face90e8babcba3e73ecebd2be922e991c062b9.gifv" style="height: 45px">
+
+      <!-- stat bars: to add a new one, copy a whole .percent block
+           and edit both the bar-fill width (in %) and the span text
+           to match. to remove a stat, delete its whole .percent block -->
+      <div class="intro">
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 85%;"></div>
+          </div>
+          <span>85% happy</span>
+        </div>
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 55%;"></div>
+          </div>
+          <span style="margin-top: 3px">55% energy</span>
+        </div>
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 100%;"></div>
+          </div>
+          <span style="margin-top: 3px">100% confidence</span>
+        </div>
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 70%;"></div>
+          </div>
+          <span style="margin-top: 3px">70% skills</span>
+        </div>
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 20%;"></div>
+          </div>
+          <span style="margin-top: 3px">20% patience</span>
+        </div>
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 99%;"></div>
+          </div>
+          <span style="margin-top: 3px">99% creativity</span>
+        </div>
+
+        <div class="percent">
+          <div class="bar-track">
+            <div class="bar-fill" style="width: 100%;"></div>
+          </div>
+          <span style="margin-top: 3px">100% love</span>
+        </div>
+
+      </div>
+
+      <div id="bottom-lace"></div>
+    </div>
+
+    <!-- ================= right panel: blog feed ================= -->
+    <div class="panel-right">
+      <div class="board-scroll">
+
+        <!-- single post: copy this whole .post block to add a new
+             entry, always add new posts at the TOP of board-scroll
+             so the newest post shows first -->
+        <div class="post">
+          <div class="post-header">
+            <span class="post-username">Lorem Ipsum</span>
+            <span class="post-time">August 14, 2026 · 3:42 PM</span>
+          </div>
+          <div class="post-body">
+            <img src="https://64.media.tumblr.com/983cbc9444d14ca8d7a6f8e5e670aef5/a38a8e03ea46c9ee-db/s100x200/acf960438939557c3cc4ad701c1ea296fd0c34d6.gifv"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id vestibulum enim, quis elementum erat. Morbi non pellentesque sapien, sit amet tincidunt libero. Nullam aliquam porta tellus, ac mollis nunc pharetra sit amet. Aliquam consectetur ut diam eu semper. Proin nulla massa, pharetra a fermentum interdum, euismod ac nunc. Aliquam accumsan, neque ac convallis vulputate, justo nulla ultrices sem, ac tincidunt tortor tellus nec massa. Sed eu lacinia mi, non varius ante. Fusce luctus sodales eros, vel tempor sem eleifend vitae. Morbi rutrum sodales eleifend. Praesent elementum tincidunt nisi, sit amet varius orci.
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="post-header">
+            <span class="post-username">Lorem Ipsum</span>
+            <span class="post-time">August 13, 2026 · 9:10 PM</span>
+          </div>
+          <div class="post-body">
+            <img src="https://64.media.tumblr.com/17c84cd6139c19e46deb1332e40ed2fe/1fbc5933b49c6c29-db/s640x960/90b607f49e81abc8e5c0ba5696c27777a879eade.gifv" style="height: 80px"> Quisque sit amet consectetur ante. Vestibulum blandit viverra nunc, quis ultricies nisl fringilla vitae. Donec vel varius nisl, id fermentum diam. Suspendisse vehicula feugiat ullamcorper. Suspendisse posuere, quam elementum suscipit dictum, nibh turpis semper arcu, et viverra sem risus facilisis elit. Vestibulum accumsan lectus vel neque molestie, sit amet porta est commodo. Aenean non posuere dolor. Nam ac facilisis est. Nam a tortor pulvinar, posuere libero ut, scelerisque massa. Etiam eu mi pulvinar, ultrices lectus non, ultrices tortor. Nullam ut placerat tellus. Curabitur ut turpis lacus. Curabitur in dapibus enim. Nulla vulputate sodales lectus nec scelerisque. Nulla metus lacus, pulvinar ac auctor ut, blandit a elit. Nam eget sem metus. Donec tristique nec nisl et dictum. Nullam malesuada leo diam, eu cursus quam porttitor id. Etiam vitae tellus posuere nibh fermentum semper id et felis. Sed sed ipsum sed quam pharetra interdum. Morbi pulvinar imperdiet velit a tempor.
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="post-header">
+            <span class="post-username">Lorem Ipsum</span>
+            <span class="post-time">August 13, 2026 · 9:10 PM</span>
+          </div>
+          <div class="post-body">
+            Quisque sit amet consectetur ante. Vestibulum blandit viverra nunc, quis ultricies nisl fringilla vitae. Donec vel varius nisl, id fermentum diam. Suspendisse vehicula feugiat ullamcorper.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- side tabs: edit href / label text for each link, and move
+         the "active" class to whichever tab is the current page -->
+    <div class="tabs">
+      <a href="#" class="active">home</a>
+      <a href="#">profile</a>
+      <a href="#">diary</a>
+      <a href="#">photos</a>
+      <a href="#">board</a>
+      <a href="#">links</a>
+    </div>
+
+  </div>
+
+  <!--
+    ============================================================
+    important — free template credit
+    this is a free template. please do not remove or edit the
+    "template by kkul" credit/link below. keep it visible on
+    your page as-is. thank you for respecting the creator's work!
+    ============================================================
+  -->
+  <footer class="site-footer">2026 · template by <a href="https://kkul.store/">꿀 kkul</a></footer>
+</div>
+
+<!-- ============================================================
+     cursor sparkle trail script
+     change the "colour" variable below to any hex color, or set
+     it to "random" for rainbow sparkles. "sparkles" controls how
+     many particles trail behind the cursor at once
+     ============================================================ -->
+<script>
+    var colour = "#ed97b7"; 
+    var sparkles = 50;
+
+    /****************************
+     *  Tinkerbell Magic Sparkle *
+     *(c)2005-13 mf2fm web-design*
+     *  http://www.mf2fm.com/rv  *
+     * DON'T EDIT BELOW THIS BOX *
+     ****************************/
+    var x = ox = 400;
+    var y = oy = 300;
+    var swide = 800;
+    var shigh = 600;
+    var sleft = sdown = 0;
+    var tiny = new Array();
+    var star = new Array();
+    var starv = new Array();
+    var starx = new Array();
+    var stary = new Array();
+    var tinyx = new Array();
+    var tinyy = new Array();
+    var tinyv = new Array();
+
+    window.onload = function() {
+      if (document.getElementById) {
+        var i, rats, rlef, rdow;
+        for (var i = 0; i < sparkles; i++) {
+          var rats = createDiv(3, 3);
+          rats.style.visibility = "hidden";
+          rats.style.zIndex = "999999999";
+          document.body.appendChild(tiny[i] = rats);
+          starv[i] = 0;
+          tinyv[i] = 0;
+          var rats = createDiv(5, 5);
+          rats.style.backgroundColor = "transparent";
+          rats.style.visibility = "hidden";
+          rats.style.zIndex = "999999999";
+          var rlef = createDiv(1, 5);
+          var rdow = createDiv(5, 1);
+          rats.appendChild(rlef);
+          rats.appendChild(rdow);
+          rlef.style.top = "2px";
+          rlef.style.left = "0px";
+          rdow.style.top = "0px";
+          rdow.style.left = "2px";
+          document.body.appendChild(star[i] = rats);
+        }
+        set_width();
+        sparkle();
+      }
+    }
+
+    function sparkle() {
+      var c;
+      if (Math.abs(x - ox) > 1 || Math.abs(y - oy) > 1) {
+        ox = x;
+        oy = y;
+        for (c = 0; c < sparkles; c++)
+          if (!starv[c]) {
+            star[c].style.left = (starx[c] = x) + "px";
+            star[c].style.top = (stary[c] = y + 1) + "px";
+            star[c].style.clip = "rect(0px, 5px, 5px, 0px)";
+            star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = (colour == "random") ? newColour() : colour;
+            star[c].style.visibility = "visible";
+            starv[c] = 50;
+            break;
+          }
+      }
+      for (c = 0; c < sparkles; c++) {
+        if (starv[c]) update_star(c);
+        if (tinyv[c]) update_tiny(c);
+      }
+      setTimeout("sparkle()", 40);
+    }
+
+    function update_star(i) {
+      if (--starv[i] == 25) star[i].style.clip = "rect(1px, 4px, 4px, 1px)";
+      if (starv[i]) {
+        stary[i] += 1 + Math.random() * 3;
+        starx[i] += (i % 5 - 2) / 5;
+        if (stary[i] < shigh + sdown) {
+          star[i].style.top = stary[i] + "px";
+          star[i].style.left = starx[i] + "px";
+        } else {
+          star[i].style.visibility = "hidden";
+          starv[i] = 0;
+          return;
+        }
+      } else {
+        tinyv[i] = 50;
+        tiny[i].style.top = (tinyy[i] = stary[i]) + "px";
+        tiny[i].style.left = (tinyx[i] = starx[i]) + "px";
+        tiny[i].style.width = "2px";
+        tiny[i].style.height = "2px";
+        tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor;
+        star[i].style.visibility = "hidden";
+        tiny[i].style.visibility = "visible"
+      }
+    }
+
+    function update_tiny(i) {
+      if (--tinyv[i] == 25) {
+        tiny[i].style.width = "1px";
+        tiny[i].style.height = "1px";
+      }
+      if (tinyv[i]) {
+        tinyy[i] += 1 + Math.random() * 3;
+        tinyx[i] += (i % 5 - 2) / 5;
+        if (tinyy[i] < shigh + sdown) {
+          tiny[i].style.top = tinyy[i] + "px";
+          tiny[i].style.left = tinyx[i] + "px";
+        } else {
+          tiny[i].style.visibility = "hidden";
+          tinyv[i] = 0;
+          return;
+        }
+      } else tiny[i].style.visibility = "hidden";
+    }
+
+    document.onmousemove = mouse;
+
+    function mouse(e) {
+      if (e) {
+        y = e.pageY;
+        x = e.pageX;
+      } else {
+        set_scroll();
+        y = event.y + sdown;
+        x = event.x + sleft;
+      }
+    }
+
+    window.onscroll = set_scroll;
+
+    function set_scroll() {
+      if (typeof(self.pageYOffset) == 'number') {
+        sdown = self.pageYOffset;
+        sleft = self.pageXOffset;
+      } else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+        sdown = document.body.scrollTop;
+        sleft = document.body.scrollLeft;
+      } else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+        sleft = document.documentElement.scrollLeft;
+        sdown = document.documentElement.scrollTop;
+      } else {
+        sdown = 0;
+        sleft = 0;
+      }
+    }
+
+    window.onresize = set_width;
+
+    function set_width() {
+      var sw_min = 999999;
+      var sh_min = 999999;
+      if (document.documentElement && document.documentElement.clientWidth) {
+        if (document.documentElement.clientWidth > 0) sw_min = document.documentElement.clientWidth;
+        if (document.documentElement.clientHeight > 0) sh_min = document.documentElement.clientHeight;
+      }
+      if (typeof(self.innerWidth) == 'number' && self.innerWidth) {
+        if (self.innerWidth > 0 && self.innerWidth < sw_min) sw_min = self.innerWidth;
+        if (self.innerHeight > 0 && self.innerHeight < sh_min) sh_min = self.innerHeight;
+      }
+      if (document.body.clientWidth) {
+        if (document.body.clientWidth > 0 && document.body.clientWidth < sw_min) sw_min = document.body.clientWidth;
+        if (document.body.clientHeight > 0 && document.body.clientHeight < sh_min) sh_min = document.body.clientHeight;
+      }
+      if (sw_min == 999999 || sh_min == 999999) {
+        sw_min = 800;
+        sh_min = 600;
+      }
+      swide = sw_min;
+      shigh = sh_min;
+    }
+
+    function createDiv(height, width) {
+      var div = document.createElement("div");
+      div.style.position = "absolute";
+      div.style.height = height + "px";
+      div.style.width = width + "px";
+      div.style.overflow = "hidden";
+      return (div);
+    }
+
+    function newColour() {
+      var c = new Array();
+      c[0] = 255;
+      c[1] = Math.floor(Math.random() * 256);
+      c[2] = Math.floor(Math.random() * (256 - c[1] / 2));
+      c.sort(function() {
+        return (0.5 - Math.random());
+      });
+      return ("rgb(" + c[0] + ", " + c[1] + ", " + c[2] + ")");
+    }
+</script>
+
+</body>
+</html>
